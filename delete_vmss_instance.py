@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 from logconfig import logger
 from configuration import config
 from vminstance import VMInstance
@@ -29,13 +28,18 @@ time.sleep(timeSleep)
 resp = requests.get(r.headers["Location"], auth=BearerAuth(vmInstance.access_token))
 
 if (resp.status_code == 200):
-    servers = resp.json()["backendAddressPools"][0]["backendHttpSettingsCollection"][0]["servers"]
-    for server in servers:
-        if (host_ip == server["address"]):
-            health = server["health"]
-            print('{0} is {1}'.format(host_name, health)) 
-            if (health == "Unhealty"):
-                print('Delete myself')
-                #check copying log and stopping custom metric
-                #delete vmss instance
+    #servers = resp.json()["backendAddressPools"][0]["backendHttpSettingsCollection"][0]["servers"]
+    pools = resp.json()["backendAddressPools"]
+    for pool in pools:
+        settings = pool["backendHttpSettingsCollection"]
+        for setting in settings:
+            servers = setting["servers"]
+            for server in servers:
+                if (host_ip == server["address"]):
+                    health = server["health"]
+                    print('{0} is {1}'.format(host_name, health))
+                    if (health == "Unhealty"):
+                        print('Delete myself')
+                        #check copying log and stopping custom metric
+                        #delete vmss instance
 
