@@ -30,7 +30,7 @@ def delete_vmss_instance():
 
     resourceGroupName = metadata.resourceGroupName
     vmScaleSetName    = metadata.vmScaleSetName
-    host_name         = socket.gethostname()
+    #host_name         = socket.gethostname()
     vmid              = hostname_to_vmid(host_name)
     compute_client.virtual_machine_scale_set_vms.delete(resourceGroupName, vmScaleSetName, vmid)
 
@@ -89,8 +89,9 @@ if (resp.status_code == 200):
                     health = server["health"]
                     logger.info(host_name + " is " + health)
                     if (health == "Unhealthy"):
-                        logger.info("Delete " + host_name)
                         #check copying log and stopping custom metric
+                        logger.info("Check copying logs and stopping custom metric.")
                         #delete vmss instance
+                        logger.info("Delete " + host_name)
                         delete_vmss_instance()
 
