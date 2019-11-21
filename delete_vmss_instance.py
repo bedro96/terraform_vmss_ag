@@ -21,7 +21,7 @@ timeSleep = 10
 def delete_vmss_instance():
     ##MSI based authentication
     credentials       = MSIAuthentication()
-    metadata        = InstanceMetadata().populate()
+    metadata          = InstanceMetadata().populate()
     
     subscription_id   = metadata.subscriptionId
     #resource_client   = ResourceManagementClient(credentials, subscription_id)
