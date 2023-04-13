@@ -22,12 +22,12 @@ tags = response_txt['tags']
 ###############################################################
 global pendingDeleteState
 pendingDeleteState = False
-print('tags: {}'.format(tags))
+print(f'tags: {tags}')
 for tag in response_txt['tagsList']:
     for k, v in tag.items():
         if( k == 'name' and v == 'Platform.PendingDeletionTime'):
             pendingDeleteState = True
-print('PendingDelteState is {}'.format(pendingDeleteState))
+print(f'PendingDelteState is {pendingDeleteState}')
 ###############################################################
 #    if(result['name'] == 'Platform.PendingDeleteTime'):
 #        print('PendingDeleteTime is detected')

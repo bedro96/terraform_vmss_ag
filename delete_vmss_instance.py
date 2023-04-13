@@ -41,17 +41,13 @@ def hostname_to_vmid(hostname):
     vmid = 0
     # reverse string and process each char
     for x in hexatrig[::-1]:
-        if x.isdigit():
-            vmid += int(x) * multiplier
-        else:
-            # convert letter to corresponding integer
-            vmid += (ord(x) - 55) * multiplier
+        vmid += int(x) * multiplier if x.isdigit() else (ord(x) - 55) * multiplier
         multiplier *= 36
     return vmid
 
 # Check the value of Platform.PendingDeletionTime tag of IMDS
 if (isPendingDelete == False):
-    logger.info('exit : ' + str(isPendingDelete))
+    logger.info(f'exit : {str(isPendingDelete)}')
     sys.exit(1)
 
 # Get App GW Backend status check URL and App GW name
@@ -66,7 +62,7 @@ formatted_url = appGatewayUrl.format(subscriptionId = metadata.subscriptionId, \
 try:
     r = requests.post(formatted_url, headers = {}, auth=BearerAuth(metadata.access_token))
 except requests.exceptions.RequestException as e:
-    logger.info("error : " + str(e))
+    logger.info(f"error : {str(e)}")
     sys.exit(1)
 
 # Waiting for another api to check the result.
@@ -74,7 +70,7 @@ time.sleep(timeSleep)
 try:
     resp = requests.get(r.headers["Location"], auth=BearerAuth(metadata.access_token))
 except requests.exceptions.RequestException as e:
-    logger.info("error : " + str(e))
+    logger.info(f"error : {str(e)}")
     sys.exit(1)
 
 # Delete VMSS instance
@@ -87,11 +83,11 @@ if (resp.status_code == 200):
             for server in servers:
                 if (host_ip == server["address"]):
                     health = server["health"]
-                    logger.info(host_name + " is " + health)
+                    logger.info(f"{host_name} is {health}")
                     if (health == "Unhealthy"):
                         #check copying log and stopping custom metric
                         logger.info("Check copying logs and stopping custom metric.")
                         #delete vmss instance
-                        logger.info("Delete " + host_name)
+                        logger.info(f"Delete {host_name}")
                         delete_vmss_instance()
 
